@@ -25,6 +25,7 @@ let send = (data, callback) => {
 
 exports.handler = (event, context, callback) => {
 	let result = event.events && event.events[0];
+	console.log(result);
 	if (result) {
 		let content = event.events[0] || {};
 		let message = {
