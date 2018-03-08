@@ -34,8 +34,6 @@ let send = (data, callback) => {
 exports.handler = (event, context, callback) => {
 	let result = event.events && event.events[0];
 	if (result.message.type == "text") {
-
-		console.log(result);
 		if (result.message.text == "アースリンク") {
 			let content = event.events[0] || {};
 			let message = {
@@ -58,15 +56,26 @@ exports.handler = (event, context, callback) => {
 			send(message, () => {
 				callback();
 			});
-		} else if(result.message.text == "あああ") {
-			let content = event.events[0] || {};
-			let user_params = ['count' => 10];
-			let timeline = twitter_client.get('statuses/user_timeline', user_params);
-			console.log(user_params);
-			console.log(timeline);
-			// send(message, () => {
-			// 	callback();
-			// });
+		} else if(result.message.text == "あ") {
+			const user_params = {count: 1};
+			twitter_client.get('statuses/home_timeline', user_params, function(error, tweets, response) {
+				console.log(tweets)
+				let content = event.events[0] || {};
+				console.log(content);
+				let message = {
+					"replyToken":result.replyToken,
+					"messages": [
+						{
+							"type": "text",
+							"text": tweets[0].user.name + '@' + tweets[0].user.screen_name + '\n' + tweets[0].text
+						}
+					]
+				};
+				console.log(message);
+				send(message, () => {
+					callback();
+				});
+			})
 		} else {
 			let content = event.events[0] || {};
 			let message = {
@@ -97,7 +106,6 @@ exports.handler = (event, context, callback) => {
 		send(message, () => {
 			callback();
 		});
-
 	} else {
 		callback();
 	}
