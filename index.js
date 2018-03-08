@@ -4,10 +4,10 @@ const https = require('https');
 const twitter = require('twitter');
 
 const twitter_client = new twitter({
-	consumer_key: CONSUMER_KEY,
-	consumer_secret: CONSUMER_SECRET,
-	access_token_key: ACCESS_TOKEN_KEY,
-	access_token_secret: ACCESS_TOKEN_SECRET
+	consumer_key: process.env.CONSUMER_KEY,
+	consumer_secret: process.env.CONSUMER_SECRET,
+	access_token_key: process.env.ACCESS_TOKEN_KEY,
+	access_token_secret: process.env.ACCESS_TOKEN_SECRET
 });
 
 let send = (data, callback) => {
@@ -36,14 +36,14 @@ exports.handler = (event, context, callback) => {
 	let result_text = result.message.text;
 console.log(result_text);
 
-	if (result.message.type == "text") {
-		if (result.message.text == "アースリンク") {
+	if(result.message.type == "text") {
+		if(result.message.text == "アースリンク") {
 			let content = event.events[0] || {};
 			let message = {
 				"replyToken":result.replyToken,
 				"messages": [{
 					"type": "template",
-					"altText": "this is a image carousel template",
+					"altText": "Earth Link Logo Image",
 					"template": {
 						"type": "image_carousel",
 						"columns": [{
@@ -56,67 +56,56 @@ console.log(result_text);
 					}
 				}]
 			};
-			send(message, () => {
-				callback();
-			});
+			send(message, () => { callback(); });
 		} else if(result_text.charAt(0) == "@") {
-			let user_params = {count: 1};
-			if(result_text.charAt(1) == "s") {
-				user_params = {count: 1, screen_name: 'smzkujr2'};
-			} else if(result_text.charAt(1) == "m") {
-				user_params = {count: 1, screen_name: 'meg_yamayoung'};
-			} else if(result_text.charAt(1) == "A") {
-				user_params = {count: 1, screen_name: 'AbeShinzo'};
-			}
-			console.log(user_params);
-			twitter_client.get('statuses/home_timeline', user_params, function(error, tweets, response) {
-				console.log(tweets)
+			let user_params = {count: 1, screen_name: result_text.slice(0)};
+console.log(user_params);
+			twitter_client.get('statuses/user_timeline', user_params, function(error, tweets, response) {
+console.log(tweets)
 				let content = event.events[0] || {};
-				console.log(content);
-				let message = {
-					"replyToken":result.replyToken,
-					"messages": [
-						{
+console.log(content);
+				if(tweets == null) {
+					let message = {
+						"replyToken":result.replyToken,
+						"messages": [{
+								"type": "text",
+								"text": "指定したユーザをフォローしていません。"
+						}]
+					};
+				} else {
+					let message = {
+						"replyToken":result.replyToken,
+						"messages": [{
 							"type": "text",
 							"text": tweets[0].user.name + '@' + tweets[0].user.screen_name + '\n\n' + tweets[0].text
-						}
-					]
-				};
-				console.log(message);
-				send(message, () => {
-					callback();
-				});
+						}]
+					};
+				}
+console.log(message);
+				send(message, () => { callback(); });
 			})
 		} else {
 			let content = event.events[0] || {};
 			let message = {
 				"replyToken":result.replyToken,
-				"messages": [
-					{
-						"type": "text",
-						"text": content.message.text
-					}
-				]
+				"messages": [{
+					"type": "text",
+					"text": content.message.text
+				}]
 			};
-			send(message, () => {
-				callback();
-			});
+			send(message, () => { callback(); });
 		}
-	} else if (result.message.type == "sticker") {
+	} else if(result.message.type == "sticker") {
 		let content = event.events[0] || {};
 		let message = {
 			"replyToken":result.replyToken,
-			"messages": [
-				{
-					"type": "sticker",
-					"packageId":content.message.packageId,
-					"stickerId":content.message.stickerId
-				}
-			]
+			"messages": [{
+				"type": "sticker",
+				"packageId":content.message.packageId,
+				"stickerId":content.message.stickerId
+			}]
 		};
-		send(message, () => {
-			callback();
-		});
+		send(message, () => { callback(); });
 	} else {
 		callback();
 	}
