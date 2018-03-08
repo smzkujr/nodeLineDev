@@ -65,8 +65,8 @@ console.log(result_text);
 				user_params = {count: 1, screen_name: 'smzkujr2'};
 			} else if(result_text.charAt(1) == "m") {
 				user_params = {count: 1, screen_name: 'meg_yamayoung'};
-			} else if(result_text.charAt(1) == "P") {
-				user_params = {count: 1, screen_name: 'PremiumMalts_jp'};
+			} else if(result_text.charAt(1) == "A") {
+				user_params = {count: 1, screen_name: 'AbeShinzo'};
 			}
 			console.log(user_params);
 			twitter_client.get('statuses/home_timeline', user_params, function(error, tweets, response) {
