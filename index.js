@@ -4,10 +4,10 @@ const https = require('https');
 const twitter = require('twitter');
 
 const twitter_client = new twitter({
-	consumer_key: 'Vfk1x22izrZoPMRqYuWn0voit',
-	consumer_secret: 'MwLcekmLk7CXjHHZlXRroWGwMb5XE7oE0dzP3afRQ4sXtUe66b',
-	access_token_key: '3819819252-tUZVEcrJE1THnhyBUpaMb6Gztnq1Ve4qN8mJhRX',
-	access_token_secret: 'T1qMXavHztfpB2KGqdib7H8btFdiVytOjT2GVllJenJNv'
+	consumer_key: CONSUMER_KEY,
+	consumer_secret: CONSUMER_SECRET,
+	access_token_key: ACCESS_TOKEN_KEY,
+	access_token_secret: ACCESS_TOKEN_SECRET
 });
 
 let send = (data, callback) => {
@@ -47,10 +47,10 @@ console.log(result_text);
 					"template": {
 						"type": "image_carousel",
 						"columns": [{
-							"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRoOYethc6eFEJGPPzd2iYSiJZOZxGW17vl9BpUPmL6MeoRVJR",
+							"imageUrl": "http://www.earthlink.co.jp/common/img/common/logo.jpg",
 							"action": {
 								"type": "uri",
-								"uri": "http://www.earthlink.co.jp/"
+								"uri": "https://www.earthlink.co.jp/"
 							}
 						}]
 					}
@@ -60,9 +60,9 @@ console.log(result_text);
 				callback();
 			});
 		} else if(result_text.charAt(0) == "@") {
-			const user_params;
+			let user_params = {count: 1};
 			if(result_text.charAt(1) == "s") {
-				user_params = {count: 1, screen_name: 'smzkujr'};
+				user_params = {count: 1, screen_name: 'smzkujr2'};
 			} else if(result_text.charAt(1) == "m") {
 				user_params = {count: 1, screen_name: 'meg_yamayoung'};
 			} else if(result_text.charAt(1) == "P") {
@@ -78,7 +78,7 @@ console.log(result_text);
 					"messages": [
 						{
 							"type": "text",
-							"text": tweets[0].user.name + '@' + tweets[0].user.screen_name + '\n' + tweets[0].text
+							"text": tweets[0].user.name + '@' + tweets[0].user.screen_name + '\n\n' + tweets[0].text
 						}
 					]
 				};
