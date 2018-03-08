@@ -3,6 +3,13 @@
 const https = require('https');
 const twitter = require('twitter');
 
+const twitter_client = new twitter({
+	consumer_key: 'Vfk1x22izrZoPMRqYuWn0voit',
+	consumer_secret: 'MwLcekmLk7CXjHHZlXRroWGwMb5XE7oE0dzP3afRQ4sXtUe66b',
+	access_token_key: '3819819252-tUZVEcrJE1THnhyBUpaMb6Gztnq1Ve4qN8mJhRX',
+	access_token_secret: 'T1qMXavHztfpB2KGqdib7H8btFdiVytOjT2GVllJenJNv'
+});
+
 let send = (data, callback) => {
 	let body = JSON.stringify(data);
 
@@ -53,7 +60,6 @@ exports.handler = (event, context, callback) => {
 			});
 		} else if(result.message.text == "あああ") {
 			let content = event.events[0] || {};
-
 			// send(message, () => {
 			// 	callback();
 			// });
