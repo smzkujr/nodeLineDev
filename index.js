@@ -34,8 +34,6 @@ let send = (data, callback) => {
 exports.handler = (event, context, callback) => {
 	let result = event.events && event.events[0];
 	let result_text = result.message.text;
-console.log(result_text);
-
 	if(result.message.type == "text") {
 		if(result.message.text == "アースリンク") {
 			let content = event.events[0] || {};
@@ -47,10 +45,10 @@ console.log(result_text);
 					"template": {
 						"type": "image_carousel",
 						"columns": [{
-							"imageUrl": "http://www.earthlink.co.jp/common/img/common/logo.jpg",
+							"imageUrl": "https://cdn.it-trend.jp/products/4875/current/logo?1491389610",
 							"action": {
 								"type": "uri",
-								"uri": "https://www.earthlink.co.jp/"
+								"uri": "https://www.earthlink.co.jp/sakura/"
 							}
 						}]
 					}
@@ -59,19 +57,17 @@ console.log(result_text);
 			send(message, () => { callback(); });
 		} else if(result_text.charAt(0) == "@") {
 			let user_params = {count: 1, screen_name: result_text.slice(0)};
-console.log(user_params);
 			twitter_client.get('statuses/user_timeline', user_params, function(error, tweets, response) {
-console.log(tweets)
 				let content = event.events[0] || {};
-console.log(content);
-				if(tweets == null) {
+				if(error) {
 					let message = {
 						"replyToken":result.replyToken,
 						"messages": [{
 								"type": "text",
-								"text": "指定したユーザをフォローしていません。"
+								"text": "指定したユーザからツイートの公開を承認されていません。"
 						}]
 					};
+					send(message, () => { callback(); });
 				} else {
 					let message = {
 						"replyToken":result.replyToken,
@@ -80,9 +76,8 @@ console.log(content);
 							"text": tweets[0].user.name + '@' + tweets[0].user.screen_name + '\n\n' + tweets[0].text
 						}]
 					};
-				}
-console.log(message);
 				send(message, () => { callback(); });
+				}
 			})
 		} else {
 			let content = event.events[0] || {};
