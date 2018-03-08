@@ -1,6 +1,7 @@
 'use strict';
 
 const https = require('https');
+const twitter = require('twitter');
 
 let send = (data, callback) => {
 	let body = JSON.stringify(data);
@@ -26,7 +27,7 @@ let send = (data, callback) => {
 exports.handler = (event, context, callback) => {
 	let result = event.events && event.events[0];
 	if (result.message.type == "text") {
-		
+
 		console.log(result);
 		if (result.message.text == "アースリンク") {
 			let content = event.events[0] || {};
@@ -50,6 +51,12 @@ exports.handler = (event, context, callback) => {
 			send(message, () => {
 				callback();
 			});
+		} else if(result.message.text == "あああ") {
+			let content = event.events[0] || {};
+
+			// send(message, () => {
+			// 	callback();
+			// });
 		} else {
 			let content = event.events[0] || {};
 			let message = {
@@ -85,4 +92,3 @@ exports.handler = (event, context, callback) => {
 		callback();
 	}
 };
-
