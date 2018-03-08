@@ -33,6 +33,9 @@ let send = (data, callback) => {
 
 exports.handler = (event, context, callback) => {
 	let result = event.events && event.events[0];
+	let result_text = result.message.text;
+console.log(result_text);
+
 	if (result.message.type == "text") {
 		if (result.message.text == "アースリンク") {
 			let content = event.events[0] || {};
@@ -56,8 +59,16 @@ exports.handler = (event, context, callback) => {
 			send(message, () => {
 				callback();
 			});
-		} else if(result.message.text == "あ") {
-			const user_params = {count: 1};
+		} else if(result_text.charAt(0) == "@") {
+			const user_params;
+			if(result_text.charAt(1) == "s") {
+				user_params = {count: 1, screen_name: 'smzkujr'};
+			} else if(result_text.charAt(1) == "m") {
+				user_params = {count: 1, screen_name: 'meg_yamayoung'};
+			} else if(result_text.charAt(1) == "P") {
+				user_params = {count: 1, screen_name: 'PremiumMalts_jp'};
+			}
+			console.log(user_params);
 			twitter_client.get('statuses/home_timeline', user_params, function(error, tweets, response) {
 				console.log(tweets)
 				let content = event.events[0] || {};
