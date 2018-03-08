@@ -60,6 +60,10 @@ exports.handler = (event, context, callback) => {
 			});
 		} else if(result.message.text == "あああ") {
 			let content = event.events[0] || {};
+			let user_params = ['count' => 10];
+			let timeline = twitter_client.get('statuses/user_timeline', user_params);
+			console.log(user_params);
+			console.log(timeline);
 			// send(message, () => {
 			// 	callback();
 			// });
